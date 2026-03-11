@@ -17,7 +17,7 @@ export function Logo({ variant = "default", className = "", dark = false }) {
       <img
         src="/logo.png"
         alt=""
-        className="h-8 w-auto sm:h-9 shrink-0 object-contain"
+        className="h-16 w-auto sm:h-16 shrink-0 object-contain"
         width={36}
         height={36}
         fetchpriority="high"
