@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { useOrdersStore } from "@/stores/ordersStore";
 import { OrderCard } from "../components/OrderCard";
 
@@ -12,9 +13,10 @@ export function BuyerOrdersPage() {
           <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
           <Link
             to="/dashboard"
-            className="min-h-[44px] inline-flex items-center rounded-lg px-3 text-sm font-medium text-primary hover:bg-primary/10 touch-manipulation"
+            className="min-h-[44px] -ml-1 inline-flex items-center gap-2 rounded-lg pl-1 pr-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/10 touch-manipulation"
           >
-            ← Back to products
+            <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
+            Back to products
           </Link>
         </div>
         <p className="mb-6 text-slate-600">

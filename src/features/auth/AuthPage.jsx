@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { AuthForm } from "./components/AuthForm";
 import { cn } from "@/lib/cn";
 
@@ -60,9 +61,10 @@ export function AuthPage() {
       <button
         type="button"
         onClick={() => navigate("/")}
-        className="mt-6 min-h-[44px] inline-flex items-center rounded-lg px-3 text-sm text-slate-600 hover:bg-slate-200 hover:text-slate-900 touch-manipulation"
+        className="mt-6 min-h-[44px] -ml-1 inline-flex items-center gap-2 rounded-lg pl-1 pr-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-200 hover:text-slate-900 touch-manipulation"
       >
-        ← Back to home
+        <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
+        Back to home
       </button>
     </div>
   );

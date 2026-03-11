@@ -29,8 +29,9 @@ export function ProductDetailPage() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          className="ml-4 text-primary hover:underline"
+          className="inline-flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/10 min-h-[44px] touch-manipulation"
         >
+          <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
           Back to products
         </button>
       </div>
@@ -92,9 +93,10 @@ export function ProductDetailPage() {
         <button
           type="button"
           onClick={() => navigate("/dashboard")}
-          className="mb-4 min-h-[44px] inline-flex items-center rounded-lg px-2 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 touch-manipulation"
+          className="mb-4 min-h-[44px] -ml-1 inline-flex items-center gap-2 rounded-lg pl-1 pr-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 touch-manipulation"
         >
-          ← Back to products
+          <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
+          Back to products
         </button>
         <div className="flex flex-col gap-8 lg:flex-row lg:gap-12">
           {/* Slideshow */}

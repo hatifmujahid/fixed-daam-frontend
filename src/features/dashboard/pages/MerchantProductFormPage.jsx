@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -57,8 +58,9 @@ export function MerchantProductFormPage() {
         <button
           type="button"
           onClick={() => navigate("/dashboard/inventory")}
-          className="mt-4 text-primary hover:underline"
+          className="inline-flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-primary hover:bg-primary/10 min-h-[44px] touch-manipulation"
         >
+          <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
           Back to inventory
         </button>
       </div>
@@ -102,9 +104,10 @@ export function MerchantProductFormPage() {
         <button
           type="button"
           onClick={() => navigate("/dashboard/inventory")}
-          className="mb-4 min-h-[44px] inline-flex items-center rounded-lg px-2 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 touch-manipulation"
+          className="mb-4 min-h-[44px] -ml-1 inline-flex items-center gap-2 rounded-lg pl-1 pr-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-900 touch-manipulation"
         >
-          ← Back to inventory
+          <ChevronLeft className="h-5 w-5 shrink-0" aria-hidden />
+          Back to inventory
         </button>
         <h1 className="text-2xl font-bold text-slate-900">
           {isEdit ? "Edit product" : "Add product"}
