@@ -33,6 +33,18 @@ export function Footer() {
             >
               Sign in
             </Link>
+            <Link
+              to="/terms"
+              className="hover:text-slate-900 transition-colors min-h-[44px] sm:min-h-0 flex items-center"
+            >
+              Terms
+            </Link>
+            <Link
+              to="/privacy"
+              className="hover:text-slate-900 transition-colors min-h-[44px] sm:min-h-0 flex items-center"
+            >
+              Privacy
+            </Link>
           </nav>
         </div>
         <p className="mt-8 text-center sm:text-left text-sm text-slate-500">

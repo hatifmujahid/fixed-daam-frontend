@@ -9,6 +9,8 @@ import { MerchantProductFormPage } from "@/features/dashboard/pages/MerchantProd
 import { BuyerOrdersPage } from "@/features/dashboard/pages/BuyerOrdersPage";
 import { UserProfilePage } from "@/features/dashboard/pages/UserProfilePage";
 import { NotFoundPage } from "@/features/not-found";
+import { TermsPage } from "@/features/legal/TermsPage";
+import { PrivacyPage } from "@/features/legal/PrivacyPage";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 export default function App() {
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="inventory/:id/edit" element={<MerchantProductFormPage />} />
           <Route path="profile" element={<UserProfilePage />} />
         </Route>
+        <Route path="/terms" element={<TermsPage />} />
+        <Route path="/privacy" element={<PrivacyPage />} />
         <Route path="/404" element={<NotFoundPage />} />
         <Route path="*" element={<Navigate to="/404" replace />} />
       </Route>
