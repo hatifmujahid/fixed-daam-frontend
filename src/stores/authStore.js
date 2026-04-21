@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import Cookies from "js-cookie";
+import { api } from "@/lib/api";
 
 const COOKIE_NAME = "fixeddaam-session";
 const COOKIE_OPTIONS = {
@@ -36,7 +37,11 @@ export const useAuthStore = create(
         set({ user, isAuthenticated: true });
       },
 
-      logout: () => set({ user: null, isAuthenticated: false }),
+      logout: async () => {
+        try { await api.post("/v1/auth/logout"); } catch { /* ignore */ }
+        Object.keys(Cookies.get()).forEach((name) => Cookies.remove(name));
+        set({ user: null, isAuthenticated: false });
+      },
 
       setStoreName: (storeName) =>
         set((state) => ({
