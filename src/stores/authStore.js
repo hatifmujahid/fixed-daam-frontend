@@ -9,11 +9,6 @@ const COOKIE_OPTIONS = {
   secure: window.location.protocol === "https:",
 };
 
-/**
- * Wrap the js-cookie adapter with createJSONStorage so that Zustand v4 persist
- * receives the serialised JSON string it needs — not a raw StorageValue object,
- * which js-cookie would silently convert to "[object Object]".
- */
 const cookieStorage = createJSONStorage(() => ({
   getItem: (name) => Cookies.get(name) ?? null,
   setItem: (name, value) => Cookies.set(name, value, COOKIE_OPTIONS),
@@ -25,19 +20,19 @@ export const useAuthStore = create(
     (set) => ({
       user: null,
       isAuthenticated: false,
+      accessToken: null, // in-memory only — not persisted, restored via silent refresh on reload
 
-      login: (userData) => {
+      login: (userData, accessToken) => {
         const user = {
           ...userData,
           storeName:
             userData.storeName ??
             (userData.role === "merchant" ? (userData.name ?? "My Store") : undefined),
         };
-        set({ user, isAuthenticated: true });
+        set({ user, isAuthenticated: true, accessToken: accessToken ?? null });
       },
 
       logout: async () => {
-        // Fire-and-forget — clear server HttpOnly cookies; don't await or let errors block state reset
         const base = import.meta.env.VITE_API_BASE_URL || "";
         fetch(`${base}/v1/auth/logout`, {
           method: "POST",
@@ -45,8 +40,10 @@ export const useAuthStore = create(
           headers: { "Content-Type": "application/json" },
         }).catch(() => {});
         Object.keys(Cookies.get()).forEach((name) => Cookies.remove(name));
-        set({ user: null, isAuthenticated: false });
+        set({ user: null, isAuthenticated: false, accessToken: null });
       },
+
+      setAccessToken: (token) => set({ accessToken: token }),
 
       setStoreName: (storeName) =>
         set((state) => ({
@@ -63,6 +60,11 @@ export const useAuthStore = create(
           return { user: merged };
         }),
     }),
-    { name: COOKIE_NAME, storage: cookieStorage }
+    {
+      name: COOKIE_NAME,
+      storage: cookieStorage,
+      // Only persist session identity — accessToken is in-memory and restored on reload via /auth/refresh-tokens
+      partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
+    }
   )
 );

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useAuthStore } from "@/stores/authStore";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || "";
 
@@ -6,6 +7,15 @@ export const api = axios.create({
   baseURL,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
+});
+
+// Attach access token as Authorization header on every request
+api.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 let isRefreshing = false;
@@ -20,14 +30,11 @@ api.interceptors.response.use(
   (res) => res,
   async (error) => {
     const original = error.config;
-
-    // Skip retry logic for the refresh endpoint itself to avoid infinite loops
     const isRefreshCall = original?.url?.includes("/auth/refresh-tokens");
     const isLogoutCall = original?.url?.includes("/auth/logout");
 
     if (error.response?.status === 401 && !original._retry && !isRefreshCall && !isLogoutCall) {
       if (isRefreshing) {
-        // Queue this request until the refresh completes
         return new Promise((resolve, reject) => {
           waitQueue.push({ resolve, reject });
         })
@@ -39,13 +46,12 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post("/v1/auth/refresh-tokens");
+        const refreshRes = await api.post("/v1/auth/refresh-tokens");
+        useAuthStore.getState().setAccessToken(refreshRes.data.accessToken);
         flushQueue(null);
-        return api(original); // retry original request — browser now has new accessToken cookie
+        return api(original);
       } catch (refreshError) {
         flushQueue(refreshError);
-        // Refresh failed — session is truly expired; logout without making another API call
-        const { useAuthStore } = await import("@/stores/authStore");
         useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       } finally {
