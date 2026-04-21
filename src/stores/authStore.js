@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import Cookies from "js-cookie";
-import { api } from "@/lib/api";
 
 const COOKIE_NAME = "fixeddaam-session";
 const COOKIE_OPTIONS = {
@@ -38,7 +37,13 @@ export const useAuthStore = create(
       },
 
       logout: async () => {
-        try { await api.post("/v1/auth/logout"); } catch { /* ignore */ }
+        // Fire-and-forget — clear server HttpOnly cookies; don't await or let errors block state reset
+        const base = import.meta.env.VITE_API_BASE_URL || "";
+        fetch(`${base}/v1/auth/logout`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+        }).catch(() => {});
         Object.keys(Cookies.get()).forEach((name) => Cookies.remove(name));
         set({ user: null, isAuthenticated: false });
       },
